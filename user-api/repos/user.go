@@ -3,8 +3,8 @@ package repos
 import (
 	"context"
 
-	"github.com/yosa12978/twitter/user-api/db"
 	"github.com/yosa12978/twitter/user-api/logging"
+	"github.com/yosa12978/twitter/user-api/mongodb"
 	"github.com/yosa12978/twitter/user-api/types"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -32,7 +32,7 @@ type userMongo struct {
 func New(ctx context.Context) User {
 	repo := new(userMongo)
 	repo.logger = logging.New("userRepoMongo")
-	repo.db = db.GetDB(ctx)
+	repo.db = mongodb.Get(ctx)
 	return repo
 }
 

@@ -5,32 +5,32 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/yosa12978/twitter/user-api/config"
-	"github.com/yosa12978/twitter/user-api/db"
+	"github.com/yosa12978/twitter/user-api/configs"
 	"github.com/yosa12978/twitter/user-api/handlers"
 	"github.com/yosa12978/twitter/user-api/logging"
+	"github.com/yosa12978/twitter/user-api/mongodb"
 )
 
 func init() {
-	config.LoadConfig()
+	configs.LoadConfig()
 }
 
 type App struct {
 	router http.Handler
 	logger logging.Logger
-	cfg    config.Config
+	cfg    configs.Config
 }
 
 func New() *App {
 	app := new(App)
 	app.logger = logging.New("application")
 	app.router = handlers.NewRouter()
-	app.cfg = config.Get()
+	app.cfg = configs.Get()
 	return app
 }
 
 func (app *App) Run(ctx context.Context) error {
-	db.GetDB(ctx)
+	mongodb.Get(ctx)
 
 	server := http.Server{
 		Addr:    app.cfg.Addr,
