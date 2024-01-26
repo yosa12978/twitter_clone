@@ -7,3 +7,10 @@ run: build
 
 test:
 	@go test
+
+lint:
+	@golangci-lint run
+
+docker:
+	docker build -t yosaa5782/twitter-user-api .
+	docker run --rm --name twitter-user-api -p 5000:5000 --network twitter-net -d yosaa5782/twitter-user-api

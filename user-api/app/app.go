@@ -11,10 +11,6 @@ import (
 	"github.com/yosa12978/twitter/user-api/mongodb"
 )
 
-func init() {
-	configs.LoadConfig()
-}
-
 type App struct {
 	router http.Handler
 	logger logging.Logger
@@ -24,7 +20,6 @@ type App struct {
 func New() *App {
 	app := new(App)
 	app.logger = logging.New("application")
-	app.router = handlers.NewRouter()
 	app.cfg = configs.Get()
 	return app
 }
@@ -32,9 +27,11 @@ func New() *App {
 func (app *App) Run(ctx context.Context) error {
 	mongodb.Get(ctx)
 
+	app.router = handlers.NewRouter(ctx)
+
 	server := http.Server{
 		Addr:    app.cfg.Addr,
-		Handler: handlers.NewRouter(),
+		Handler: app.router,
 	}
 
 	errch := make(chan error, 1)

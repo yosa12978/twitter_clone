@@ -8,12 +8,14 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/yosa12978/twitter/user-api/app"
+	"github.com/yosa12978/twitter/user-api/configs"
 )
 
 func init() {
 	if err := godotenv.Load(); err != nil {
 		panic(err)
 	}
+	configs.LoadConfig()
 }
 
 func main() {

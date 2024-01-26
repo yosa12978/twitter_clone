@@ -7,7 +7,7 @@ type BaseModel struct {
 }
 
 type User struct {
-	BaseModel    `bson:",inline"`
+	BaseModel    `bson:",inline" json:",inline"`
 	Username     string `json:"username" bson:"username"`
 	PasswordHash string `json:"-" bson:"passwordHash"`
 	Salt         string `json:"-" bson:"salt"`
@@ -44,7 +44,25 @@ type SignupDto struct {
 func FromDto(dto SignupDto) User {
 	return User{
 		Username:     dto.Username,
-		Email:        dto.Password,
+		Email:        dto.Email,
 		PasswordHash: dto.Password, // todo add hashing!!!
 	}
+}
+
+type ArrRes struct {
+	Result interface{} `json:"result"`
+}
+
+func NewArrRes(v interface{}) ArrRes {
+	return ArrRes{Result: v}
+}
+
+type PageRes struct {
+	Page      int         `json:"page"`
+	PageCount int         `json:"pageCount"`
+	ItemCount int         `json:"itemCount"`
+	HasNext   bool        `json:"hasNext"`
+	HasPrev   bool        `json:"hasPrev"`
+	Links     []string    `json:"links"`
+	Result    interface{} `json:"result"`
 }

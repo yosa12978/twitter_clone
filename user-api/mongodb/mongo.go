@@ -24,6 +24,9 @@ func Get(ctx context.Context) *mongo.Database {
 		if err != nil {
 			logger.Fatalf(err.Error())
 		}
+		if err := client.Ping(ctx, nil); err != nil {
+			logger.Fatalf(err.Error())
+		}
 		db = client.Database(cfg.MongoDbname)
 	})
 	return db

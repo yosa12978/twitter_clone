@@ -1,3 +1,8 @@
 add db seeding
 add swagger
 handlers
+
+add json encoding helper
+test repo
+add password hashing helper
+add jwt handlers

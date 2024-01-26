@@ -29,7 +29,7 @@ type userMongo struct {
 	db     *mongo.Database
 }
 
-func New(ctx context.Context) User {
+func NewUser(ctx context.Context) User {
 	repo := new(userMongo)
 	repo.logger = logging.New("userRepoMongo")
 	repo.db = mongodb.Get(ctx)
@@ -37,7 +37,7 @@ func New(ctx context.Context) User {
 }
 
 func (repo *userMongo) FindAll(ctx context.Context) ([]types.User, error) {
-	var users []types.User
+	users := []types.User{}
 	opts := options.Find().SetSort(bson.M{"username": 1})
 	cursor, err := repo.db.Collection("users").Find(ctx, bson.M{}, opts)
 	if err != nil {
@@ -55,7 +55,7 @@ func (repo *userMongo) FindById(ctx context.Context, id string) (*types.User, er
 		return nil, err
 	}
 	var user types.User
-	err = repo.db.Collection("users").FindOne(ctx, bson.M{"baseModel._id": objId}).Decode(&user)
+	err = repo.db.Collection("users").FindOne(ctx, bson.M{"_id": objId}).Decode(&user)
 	return &user, err
 }
 
@@ -96,6 +96,7 @@ func (repo *userMongo) FindByCredentialsEmail(ctx context.Context, email string,
 }
 
 func (repo *userMongo) Create(ctx context.Context, user types.User) (string, error) {
+	user.BaseModel.Id = primitive.NewObjectID()
 	res, err := repo.db.Collection("users").InsertOne(ctx, user)
 	return res.InsertedID.(primitive.ObjectID).Hex(), err
 }
